@@ -1,0 +1,23 @@
+{
+  "name": "vuejs-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caihuiji/vuejs-practice.git"
+  },
+  "author": "chriscai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caihuiji/vuejs-practice/issues"
+  },
+  "homepage": "https://github.com/caihuiji/vuejs-practice#readme",
+  "devDependencies": {
+    "jquery": "^3.1.1",
+    "vue": "^2.1.10"
+  }
+}
