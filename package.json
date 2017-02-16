@@ -1,6 +1,6 @@
 {
-  "name": "vuejs-practice",
-  "version": "1.0.0",
+  "name": "detectCss",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,16 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/caihuiji/vuejs-practice.git"
+    "url": "git+https://github.com/caihuiji/vdetectCss.git"
   },
   "author": "chriscai",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/caihuiji/vuejs-practice/issues"
+    "url": "https://github.com/caihuiji/detectCss/issues"
   },
-  "homepage": "https://github.com/caihuiji/vuejs-practice#readme",
+  "homepage": "https://github.com/caihuiji/detectCss#readme",
   "devDependencies": {
+    "cheerio": "^0.22.0",
+    "css-parse": "*",
     "jquery": "^3.1.1",
+    "underscore": "^1.8.3",
     "vue": "^2.1.10"
   }
 }
