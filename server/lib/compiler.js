@@ -6,6 +6,8 @@
 
 module.exports = Compiler;
 
+
+
 /**
  * Initialize a compiler.
  *
@@ -55,6 +57,9 @@ Compiler.prototype.mapVisit = function(nodes, delim){
  */
 
 Compiler.prototype.compile = function(node){
+  this.totalCount = 0;
+  this.usedCount = 0;
+  this.unusedCount = 0;
   return this.stylesheet(node);
 };
 
@@ -110,9 +115,14 @@ Compiler.prototype.namespace = function(node){
  */
 
 Compiler.prototype.missing = function (node) {
+
+  this.totalCount++;
+  this.unusedCount ++;
+
   var indent = this.indent();
   var decls = node.declarations;
   if (!decls.length) return '';
+
 
   return this.emit('<code class="missing" title="DOM中未出现的CSS选择器">')
     + this.emit(node.selectors.map(function(s){ return indent + '<span class="hljs-missing">' + s + '</span>' }).join(',\n'))
@@ -122,6 +132,7 @@ Compiler.prototype.missing = function (node) {
     + this.emit(this.indent(-1))
     + this.emit('\n' + this.indent() + '}')
     + this.emit('</code>');
+
 }
 
 /**
@@ -129,6 +140,10 @@ Compiler.prototype.missing = function (node) {
  */
 
 Compiler.prototype.rule = function(node){
+
+  this.totalCount++;
+  this.usedCount ++ ;
+
   var indent = this.indent();
   var decls = node.declarations;
   if (!decls.length) return '';
@@ -230,18 +245,21 @@ Compiler.prototype['font-face'] = function(node){
     + this.emit('\n}');
 };
 
-/**
- * Visit font-face node.
- */
 
+/**
+ * Visit support node.
+ */
 Compiler.prototype.supports = function(node){
-  return this.emit('@supports ', node.position)
-      + this.emit('{\n')
-      + this.emit(this.indent(1))
-      + this.mapVisit(node.rules, '\n')
-      + this.emit(this.indent(-1))
-      + this.emit('\n}');
+  return this.emit('<span class="hljs-at_rule">@<span class="hljs-keyword">supports</span> ' + node.supports + ' </span>')
+      + this.emit(
+          ' {\n'
+          + this.indent(1))
+      + this.mapVisit(node.rules, '\n\n')
+      + this.emit(
+          this.indent(-1)
+          + '\n}');
 };
+
 
 /**
  * Visit host node.

@@ -1,18 +1,5 @@
 var fs = require('fs');
 
-function _$(selector, $) {
-    try {
-        var tmp = $(selector);
-    } catch (e) {
-        if (selector.match(pseudoClasses)) {
-            return _$(selector.replace(pseudoClasses, ''));
-        } else {
-            return {};
-        }
-    }
-    return tmp;
-}
-
 const cssParse = require('css-parse')
 const _ = require("underscore");
 const cheerio = require("cheerio");
@@ -21,9 +8,10 @@ const https = require("https");
 const URL = require('url');
 const urlReg = /^(https?):\/\//i;
 const pseudoClasses = /\:hover|\:active|\:link|\:visited|\:after|\:before|\:focus/;
+const innerClasses = /media|supports/;
 
 
-var CssUsage = function(html , options)  {
+var CssUsage = function (html, options) {
     if (_.isString(html)) {
         this.html = html
         this.$ = cheerio.load(html);
@@ -41,7 +29,7 @@ var CssUsage = function(html , options)  {
 
 CssUsage.prototype = {
 
-    defaultCssProtocol : "http:",
+    defaultCssProtocol: "http:",
 
     loadCssAndCheck (href) {
 
@@ -56,10 +44,10 @@ CssUsage.prototype = {
         if (!match) {
             href = this.defaultCssProtocol + href;
             match = href.match(urlReg)
-       /*     process.nextTick(function (){
-                promiseReject(error);
-            })
-            return;*/
+            /*     process.nextTick(function (){
+             promiseReject(error);
+             })
+             return;*/
         }
 
         var httpLib = (match[1].toLowerCase() === 'http') ? http : https
@@ -98,14 +86,14 @@ CssUsage.prototype = {
         return promise;
     },
 
-  /*  _ignore : function (selector){
-        if(selector.replace(":link") > -1 ||
-            selector.indexOf(":visited") > -1 ||
-            selector.indexOf(":hover") > -1 ||
-            selector.indexOf(":active ") > -1){
-            return
-        }
-    },*/
+    /*  _ignore : function (selector){
+     if(selector.replace(":link") > -1 ||
+     selector.indexOf(":visited") > -1 ||
+     selector.indexOf(":hover") > -1 ||
+     selector.indexOf(":active ") > -1){
+     return
+     }
+     },*/
     checkCSS (styleStr) {
         var self = this
             , selectorList = []
@@ -113,9 +101,10 @@ CssUsage.prototype = {
 
         var styleObj = cssParse(styleStr);
 
+        //取出selector ，并排重
         styleObj.stylesheet.rules.forEach((item) => {
+            var hasCache = false;
             if (item.type === 'rule') {
-                var hasCache = false;
                 item.selectors.forEach((selector) => {
                     !ruleMap[selector] &&
                     (ruleMap[selector] = []) &&
@@ -125,40 +114,56 @@ CssUsage.prototype = {
                     (hasCache = true) &&
                     ruleMap[selector].push(item);
                 });
+            } else if (item.type.match(innerClasses)) {
+
+                item.rules.forEach((item) => {
+                    if (item.type === 'rule') {
+                        item.selectors.forEach((selector) => {
+                            !ruleMap[selector] &&
+                            (ruleMap[selector] = []) &&
+                            selectorList.push(selector);
+
+                            !hasCache &&
+                            (hasCache = true) &&
+                            ruleMap[selector].push(item);
+                        });
+                    }
+                })
             }
         })
 
-            selectorList.forEach((selector) => {
-                var matchDom ;
-                try{
-                    matchDom = self.$(selector);
-                }catch(e){
-                    //console.warn(e);
-                    if(selector.match(pseudoClasses , "")){
-                        var selector2 = selector.replace(pseudoClasses , "")
-                        matchDom = self.$(selector2, self.$);
-                    }else {
-                        matchDom = {};
-                    }
-                    //matchDom.replace(":")
-                }
-                //var matchDom = this.$(selector, self.$);
-                if (matchDom.length || self.unchecks[selector]) {
-                    ruleMap[selector] = null;
-                    delete ruleMap[selector];
+        selectorList.forEach((selector) => {
+            var matchDom;
+            try {
+                matchDom = self.$(selector);
+            } catch (e) {
+                //console.warn(e);
+                if (selector.match(pseudoClasses, "")) {
+                    var selector2 = selector.replace(pseudoClasses, "")
+                    matchDom = self.$(selector2, self.$);
                 } else {
-                    ruleMap[selector].forEach((rule) => {;
-                        rule.type = 'missing';
-                    });
+                    matchDom = {};
                 }
-            });
+                //matchDom.replace(":")
+            }
+            //var matchDom = this.$(selector, self.$);
+            if (matchDom.length || self.unchecks[selector]) {
+                ruleMap[selector] = null;
+                delete ruleMap[selector];
+            } else {
+                ruleMap[selector].forEach((rule) => {
+                    rule.orgType = rule.type
+                    rule.type = 'missing';
+                });
+            }
+        });
 
 
         return {
             styleStr: styleStr,
             selectorList: selectorList,
             ruleMap: ruleMap,
-            styleObj : styleObj,
+            styleObj: styleObj,
         }
     },
 }
