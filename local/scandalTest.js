@@ -1,6 +1,7 @@
 const ArgumentParser = require('argparse').ArgumentParser;
 const cssParse = require('css-parse')
 const fs = require("fs");
+const _ = require("underscore");
 
 const pseudoClasses = /\:hover|\:active|\:link|\:visited|\:after|\:before|\:focus/gi;
 
@@ -106,24 +107,101 @@ styleObj.stylesheet.rules.forEach((item) => {
 })
 
 
-//selectorList.forEach(function(selector){
-//  console.log(selector)
-//})
 
+
+var workMap = {};
+selectorList.forEach(function (selectorItem){
+    workMap[ selectorItem.replace(/\.|#/gi , "")] = { selectorName : selectorItem , foundFileList : {} , matched : false};
+})
+
+const scandal = require("scandal");
+var ref = require('scandal'), search = ref.search, PathScanner = ref.PathScanner;
+const PathSearcher = require("../lib/scandal/path-searcher");
+
+var searchPath = "E:/wework/wwopenmngnjlogic/public";
+
+
+//workMap = {"text" : { selectorName : "text" , foundFileList : {} , matched : false} }
+var searcher = new PathSearcher({
+    wordMap : workMap,
+    mode : "one"
+});
+
+
+var scanner = new PathScanner( searchPath, {
+    excludeVcsIgnores: true,
+    inclusions : ["*.js" , "*.tpl" , "*.html"]
+});
 
 /*
-pathSearcher.on('results-found' , (result)=>{
-    console.log(result)
+scanner.on("path-found" , function (path){
+    console.log(path);
+})
+
+scanner.scan();
+*/
+
+
+
+
+
+
+
+var name;
+
+name = "Search " + searchPath;
+
+console.time(name);
+
+console.log(name);
+
+/*
+scanner.on("path-found" , function (path){
+    console.log(path);
 })
 */
 
-const pathSearcher = new (require("../lib/scandal/path-searcher")('E:/wework/wwopenmngnjlogic/public/js/' , {
-    excludeVcsIgnores: true
-}));
+searcher.on('search-done', function(result) {
+    console.log(result.filePath + " finished");
+});
+
+search(/b/ig, scanner, searcher, function(result) {
 
 
-pathSearcher.searchPath(/console/gi ,'E:/wework/wwopenmngnjlogic/public/js/' , (result)=>{
-    console.log(result)
-})
+    var  matchCount = 0 , total = 0
+    _.each( searcher.wordMap , function ( matchMap , word){
+
+       /* if(Object.keys(matchMap).length == 1){
+            console.log("word : " + word + " selectorName :" + matchMap.selectorName )
+            console.log("miss");
+        }*/
+
+        if(searcher.mode == "one"){
+            if(!matchMap.matched ){
+                console.log("word : " + word + " selectorName :" + matchMap.selectorName  +"  miss");
+            }
+        }else {
+            console.log("word : " + word + " selectorName :" + matchMap.selectorName  );
+            _.each( matchMap.foundFileList , function ( matchObj , fileName){
+
+
+                console.log("   " + fileName + "")
+                if(matchObj.length){
+                    matchObj.forEach(function (matchItem ){
+
+                        console.log("   L" + matchItem.range[0][0] +"  " + matchItem.lineText + "")
+
+                    })
+                    matchCount ++ ;
+                }
+                console.log(" -------------   ");
+            })
+        }
+    })
+
+    console.log(matchCount , "  ", total)
+    console.timeEnd(name);
+
+});
 
 

@@ -6,7 +6,7 @@ ref = require('scandal'), search = ref.search, PathScanner = ref.PathScanner, Pa
 
 var searchPath, scanner, searcher;
 
-searchPath = path.join(__dirname , "test" );
+searchPath = "E:/wework/wwopenmngnjlogic/public"
 
 scanner = new PathScanner(searchPath, {
     excludeVcsIgnores: true
@@ -15,7 +15,7 @@ scanner = new PathScanner(searchPath, {
 searcher = new PathSearcher()
 
 searcher.on('results-found', function(result) {
-    return console.log("Single Path's Results", result);
+    return console.log(result.filePath);
 });
 
 
@@ -27,6 +27,6 @@ console.time(name);
 
 console.log(name);
 
-search(/text/ig, scanner, searcher, function() {
+search(/\btext\b/g, scanner, searcher, function() {
     return console.timeEnd(name);
 });
