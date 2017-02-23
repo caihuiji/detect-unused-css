@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const _ = require("underscore");
 
-const scandal = require("scandal");
 var ref = require('scandal'), search = ref.search, PathScanner = ref.PathScanner;
 const PathSearcher = require("../lib/scandal/path-searcher");
 
