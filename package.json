@@ -1,5 +1,5 @@
 {
-  "name": "detectCss",
+  "name": "detect-unused-css",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/caihuiji/vdetectCss.git"
+    "url": "git+https://github.com/caihuiji/detect-unused-css.git"
   },
   "author": "chriscai",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/caihuiji/detectCss/issues"
+    "url": "https://github.com/caihuiji/detect-unused-css/issues"
   },
-  "homepage": "https://github.com/caihuiji/detectCss#readme",
+  "homepage": "https://github.com/caihuiji/detect-unused-css#readme",
   "devDependencies": {
     "cheerio": "^0.22.0",
     "css-parse": "*",
