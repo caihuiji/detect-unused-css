@@ -16,6 +16,9 @@
     "url": "https://github.com/caihuiji/detect-unused-css/issues"
   },
   "homepage": "https://github.com/caihuiji/detect-unused-css#readme",
+  "bin": {
+    "detect-unused-css": "./lib/cli.js"
+  },
   "devDependencies": {
     "cheerio": "^0.22.0",
     "css-parse": "*",
