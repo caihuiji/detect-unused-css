@@ -5,7 +5,7 @@ detect-unused-css provides two utilities:
  - Webpage , fetch webpage and detect which style rule is unused.
  - Local , specify a directory css file , and use specify a directory to detect which style rule is unused.
 
-Unsurprisingly, these two things will generate a report for developer to remove unused style rule.
+Unsurprisingly, these two things will generate a report to help developer to remove unused style rule.
 
 
 ##Usage
