@@ -22,11 +22,11 @@ Unsurprisingly, these two things will generate a report to help developer to rem
 
 
 ##Options
-- -h, --help            Show this help message and exit.
-- -v, --version         Show program's version number and exit.
-- -s,--searchPath       path for search
-- -c,--cssFile          css for detect
-- -i, --include         search include,eg: *.js,ex/**/*.js (default:*.js,*.tpl,*.html)
-- -p, --webpage          detect unused css from web page,eg: http://www.qq.com/
+- -h, --help            , Show this help message and exit.
+- -v, --version         , Show program's version number and exit.
+- -s,--searchPath       , path for search
+- -c,--cssFile          , css for detect
+- -i, --include         , search include  ,eg: *.js,ex/**/*.js (default:*.js,*.tpl,*.html)
+- -p, --webpage         , detect unused css from web page,eg: http://www.qq.com/
 
 >  if -p is set , other arguments will be ignored.
