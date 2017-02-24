@@ -7,13 +7,13 @@ Unsurprisingly, these two things will generate a report for developer to remove 
 
 
 ##Usage
-``` javascript
+``` sh
  npm install detect-unused-css -g
 
- //#for webpage
+ # for webpage
  detect-unused-css -p http://www.qq.com
  
- //#for local directory 
+ # for local directory 
  detect-unused-css -s /home/data/usr/js  -c /home/data/usr/css/main.css 
 
 ```
