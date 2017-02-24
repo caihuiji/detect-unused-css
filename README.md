@@ -1,5 +1,5 @@
 #detect-unused-css
-
+A CLI for detect unused css from webPage or local directory.
 detect-unused-css provides two utilities:
  - Webpage , fetch webpage and detect which style rule is unused.
  - Local , specify a directory css file , and use specify a directory to detect which style rule is unused.
